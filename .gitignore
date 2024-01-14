@@ -2,3 +2,6 @@ runtime
 .vscode/
 secrets.py
 .micropico
+*.pyc
+__pycache__/
+
