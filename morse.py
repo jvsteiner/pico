@@ -1,4 +1,5 @@
 import time
+import machine
 
 CODE = {
     "A": ".-",

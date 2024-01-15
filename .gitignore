@@ -1,6 +1,6 @@
 runtime
 .vscode/
-secrets.py
+pico_secrets.py
 .micropico
 *.pyc
 __pycache__/
