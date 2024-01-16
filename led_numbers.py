@@ -3,6 +3,7 @@ from my74HC595 import Chip74HC595
 from machine import Pin
 
 comPin = [17, 16, 15, 14]
+TZ_OFFSET = 2 * 60 * 60
 
 num = [
     0xC0,
@@ -38,6 +39,28 @@ def led_display():
 # Pico-GP 21: 74HC595-SHCP(21)
 
 chip = Chip74HC595(18, 20, 21)
+
+
+def display(digit, number):
+    chns = Pin(comPin[digit], Pin.OUT)
+    chip.shiftOut(0, num[number])
+    chns.value(1)
+    time.sleep_ms(1)
+    chns.value(0)
+
+
+def display_time(offset=TZ_OFFSET):
+    t = localtime(offset=offset)
+    display(0, t[3] // 10)
+    display(1, t[3] % 10)
+    display(2, t[4] // 10)
+    display(3, t[4] % 10)
+
+
+def localtime(secs=None, offset=TZ_OFFSET):
+    """Convert the time secs expressed in seconds since the Epoch into an 8-tuple which contains: (year, month, mday, hour, minute, second, weekday, yearday) If secs is not provided or None, then the current time from the RTC is used."""
+    return time.localtime((secs if secs else time.time()) + offset)
+
 
 try:
     while True:

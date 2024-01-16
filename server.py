@@ -5,6 +5,7 @@ from picozero import pico_temp_sensor, pico_led
 import machine
 from pico_secrets import SSID, PASSWORD
 
+
 def connect():
     # Connect to WLAN
     wlan = network.WLAN(network.STA_IF)
