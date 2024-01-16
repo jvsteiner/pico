@@ -1,6 +1,7 @@
 import time
 from my74HC595 import Chip74HC595
 from machine import Pin
+import asyncio
 
 comPin = [17, 16, 15, 14]
 TZ_OFFSET = 2 * 60 * 60
@@ -49,12 +50,41 @@ def display(digit, number):
     chns.value(0)
 
 
+def display_four_digits(number):
+    for i in [3, 2, 1, 0]:
+        display(i, number % 10)
+        number = number // 10
+    time.sleep_ms(1)
+
+
 def display_time(offset=TZ_OFFSET):
     t = localtime(offset=offset)
     display(0, t[3] // 10)
     display(1, t[3] % 10)
     display(2, t[4] // 10)
     display(3, t[4] % 10)
+
+
+async def display_task(fun):
+    while True:
+        fun()
+
+
+def display_task(fun, *args, duration=3):
+    start = time.time()
+    while time.time() - start < duration:
+        fun(*args)
+
+
+async def display_task(fun, duration=3):
+    start = time.time()
+    while time.time() - start < duration:
+        fun()
+
+
+# asyncio.create_task(clock_task())
+# asyncio.run(clock_task())
+# asyncio.wait_for(clock_task, 5)
 
 
 def localtime(secs=None, offset=TZ_OFFSET):
