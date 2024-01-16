@@ -4,7 +4,7 @@ from machine import Pin
 import asyncio
 
 comPin = [17, 16, 15, 14]
-TZ_OFFSET = 2 * 60 * 60
+TZ_OFFSET = 2 * 60 * 60  # UTC+2
 
 num = [
     0xC0,
@@ -65,21 +65,15 @@ def display_time(offset=TZ_OFFSET):
     display(3, t[4] % 10)
 
 
-async def display_task(fun):
-    while True:
-        fun()
-
-
 def display_task(fun, *args, duration=3):
     start = time.time()
     while time.time() - start < duration:
         fun(*args)
 
 
-async def display_task(fun, duration=3):
-    start = time.time()
-    while time.time() - start < duration:
-        fun()
+def countdown(hi=10, duration=1):
+    for i in range(hi, -1, -1):
+        display_task(display_four_digits, i, duration=duration)
 
 
 # asyncio.create_task(clock_task())
