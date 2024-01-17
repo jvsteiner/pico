@@ -113,6 +113,7 @@ def display_four_raw(chars):
 def add_dots(chars):
     output = []
     for char in chars:
+        char = char.upper()
         if char in VALID_CHARS:
             output.append(CHARS[char])
         if char == ".":
@@ -120,11 +121,13 @@ def add_dots(chars):
     return output
 
 
-def scroll_chars(chars):
-    chars = "    " + chars + "    "
+def scroll_chars(chars, duration=500):
     chars = add_dots(chars)
+    chars = [0b11111111] * 4 + chars + [0b11111111] * 4
     for i in range(0, len(chars) - 3):
-        display_task(display_four_raw, chars[i : i + 4], duration=0.5)
+        screen = chars[i : i + 4]
+        # print(screen)
+        display_task(display_four_raw, chars[i : i + 4], duration=duration)
     time.sleep_ms(1)
 
 
@@ -143,13 +146,13 @@ def display_time(offset=TZ_OFFSET):
     display(3, t[4] % 10)
 
 
-def display_task(fun, *args, duration=3):
-    start = time.time()
-    while time.time() - start < duration:
+def display_task(fun, *args, duration=3000):
+    start = time.time_ns() // 1_000_000
+    while time.time_ns() // 1_000_000 - start < duration:
         fun(*args)
 
 
-def countdown(hi=10, duration=1):
+def countdown(hi=10, duration=1000):
     for i in range(hi, -1, -1):
         display_task(display_four_digits, i, duration=duration)
 
