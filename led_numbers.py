@@ -104,6 +104,13 @@ def display_four_chars(chars):
     time.sleep_ms(1)
 
 
+def display_number(number):
+    for i in [3, 2, 1, 0]:
+        display(i, number % 10)
+        number = number // 10
+    time.sleep_ms(1)
+
+
 def display_four_raw(chars):
     for i in [3, 2, 1, 0]:
         display_raw(i, chars[i])
@@ -126,7 +133,6 @@ def scroll_chars(chars, duration=500):
     chars = [0b11111111] * 4 + chars + [0b11111111] * 4
     for i in range(0, len(chars) - 3):
         screen = chars[i : i + 4]
-        # print(screen)
         display_task(display_four_raw, chars[i : i + 4], duration=duration)
     time.sleep_ms(1)
 
@@ -166,3 +172,56 @@ def countdown(hi=10, duration=1000):
 def localtime(secs=None, offset=TZ_OFFSET):
     """Convert the time secs expressed in seconds since the Epoch into an 8-tuple which contains: (year, month, mday, hour, minute, second, weekday, yearday) If secs is not provided or None, then the current time from the RTC is used."""
     return time.localtime((secs if secs else time.time()) + offset)
+
+
+class calc(object):
+    def __init__(self):
+        self.stack = []
+        # self.display = [0b11111111] * 4
+        self.display = 0
+
+    def push(self, value):
+        self.stack.append(value)
+        self.update_display()
+
+    def pop(self):
+        if len(self.stack) > 0:
+            self.stack.pop()
+            self.update_display()
+
+    def update_display(self):
+        if len(self.stack) > 0:
+            # self.display = add_dots(str(self.stack[-1]))
+            self.display = self.stack[-1]
+        else:
+            # self.display = [0b11111111] * 4
+            self.display = 0
+        print(self.display)
+        str_numbers = str(round(self.display, 7))
+        scroll_chars(str_numbers, duration=300)
+        # if len(str_numbers) > 4:
+        # else:
+        #     display_four_digits(self.display)
+        # display_four_raw(self.display)
+
+    def add(self):
+        if len(self.stack) > 1:
+            self.stack.append(self.stack.pop() + self.stack.pop())
+            self.update_display()
+
+    def sub(self):
+        if len(self.stack) > 1:
+            top = self.stack.pop()
+            self.stack.append(self.stack.pop() - top)
+            self.update_display()
+
+    def mul(self):
+        if len(self.stack) > 1:
+            self.stack.append(self.stack.pop() * self.stack.pop())
+            self.update_display()
+
+    def div(self):
+        if len(self.stack) > 1:
+            top = self.stack.pop()
+            self.stack.append(self.stack.pop() / top)
+            self.update_display()
