@@ -42,21 +42,21 @@ CHARS = {
     "D": 0xA1,
     "E": 0x86,
     "F": 0x8E,
-    "G": 0x82,
+    "G": 0b11000010,
     "H": 0b10001001,
-    "I": 0b11111011,
+    "I": 0x30,
     "J": 0b11100001,
-    "K": 0b10000111,
     "L": 0b11000111,
     "N": 0b10101011,
     "O": 0b10100011,
     "P": 0b10001100,
+    "Q": 0b10011000,
     "R": 0b10101111,
     "S": 0b10010010,
-    "T": 0b11001110,
+    "T": 0b10000111,
     "U": 0b11100011,
     "V": 0b11100011,
-    "Y": 0x99,
+    "Y": 0b10010001,
     "Z": 0x92,
     " ": 0b11111111,
     "-": 0b10111111,
@@ -225,3 +225,7 @@ class calc(object):
             top = self.stack.pop()
             self.stack.append(self.stack.pop() / top)
             self.update_display()
+
+    def peek(self, index=-1):
+        str_numbers = str(round(self.stack[index], 7))
+        scroll_chars(str_numbers, duration=300)
