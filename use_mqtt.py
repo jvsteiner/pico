@@ -87,11 +87,13 @@ ad = socket.getaddrinfo("pi4.tailc6a41.ts.net", 1883)
 
 
 import time
-import dht11
+import dht
+from machine import Pin
+import json
 
 temperature = 0
 humidity = 0
-dht = dht11.DHT11(13)
+sensor = dht.DHT11(Pin(13))
 
 
 def check(dht):
@@ -104,4 +106,9 @@ def check(dht):
 
 def display_temp(dht):
     temp, hum = check(dht)
-    return "T: %0.2fC  H: %0.2f" % (temp, hum) + "%"
+    return "T: %0.1fC  H: %0.1f" % (temp, hum) + "%"
+
+
+def report(dht):
+    temp, hum = check(dht)
+    return json.dumps({"temperature": temp, "humidity": hum})
